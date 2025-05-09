@@ -6,7 +6,7 @@
 #    By: ysumeral < ysumeral@student.42istanbul.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/09 14:19:51 by ysumeral          #+#    #+#              #
-#    Updated: 2025/05/09 18:43:52 by ysumeral         ###   ########.fr        #
+#    Updated: 2025/05/09 19:49:47 by ysumeral         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,10 +15,9 @@ CFLAGS = -Wall -Wextra -Werror
 SRC_DIR = ./src
 INC_DIR = ./include
 SRC = $(SRC_DIR)/main.c \
-	$(SRC_DIR)/ft_atol.c \
-	$(SRC_DIR)/program_init.c \
-	$(SRC_DIR)/program_state.c \
-	$(SRC_DIR)/validate.c
+	$(SRC_DIR)/init.c \
+	$(SRC_DIR)/memory.c \
+	$(SRC_DIR)/utils.c
 OBJ = $(SRC:.c=.o)
 NAME = philo
 
