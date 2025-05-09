@@ -6,7 +6,7 @@
 #    By: ysumeral < ysumeral@student.42istanbul.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/09 14:19:51 by ysumeral          #+#    #+#              #
-#    Updated: 2025/05/09 19:49:47 by ysumeral         ###   ########.fr        #
+#    Updated: 2025/05/09 20:19:00 by ysumeral         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,7 @@ CFLAGS = -Wall -Wextra -Werror
 SRC_DIR = ./src
 INC_DIR = ./include
 SRC = $(SRC_DIR)/main.c \
+	$(SRC_DIR)/dinner.c \
 	$(SRC_DIR)/init.c \
 	$(SRC_DIR)/memory.c \
 	$(SRC_DIR)/utils.c

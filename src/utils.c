@@ -6,13 +6,13 @@
 /*   By: ysumeral < ysumeral@student.42istanbul.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:01:48 by ysumeral          #+#    #+#             */
-/*   Updated: 2025/05/09 19:49:13 by ysumeral         ###   ########.fr       */
+/*   Updated: 2025/05/09 22:09:13 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-int validate_args(int argc, char **argv)
+int	validate_args(int argc, char **argv)
 {
 	if (argc == 5 || (argc == 6 && ft_atol(argv[5]) > 0))
 	{
