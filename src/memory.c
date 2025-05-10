@@ -3,37 +3,64 @@
 /*                                                        :::      ::::::::   */
 /*   memory.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral < ysumeral@student.42istanbul.    +#+  +:+       +#+        */
+/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:04:10 by ysumeral          #+#    #+#             */
-/*   Updated: 2025/05/09 22:12:49 by ysumeral         ###   ########.fr       */
+/*   Updated: 2025/05/10 14:12:16 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-static void	free_all(t_program *program)
+static void	free_forks(t_program *program)
 {
 	int	i;
 
 	i = 0;
+	if (program->forks)
+	{
+		while (i < program->philo_count)
+		{
+			if (program->forks[i])
+			{
+				if (program->forks[i]->fork)
+				{
+					pthread_mutex_destroy(program->forks[i]->fork);
+					free(program->forks[i]->fork);
+				}
+				free(program->forks[i]);
+			}
+			i++;
+		}
+		free(program->forks);
+		program->forks = NULL;
+	}
+}
+
+static void	free_philos(t_program *program)
+{
+	int	i;
+
+	i = 0;
+	if (program->philos)
+	{
+		while (i < program->philo_count)
+		{
+			if (program->philos[i])
+				free(program->philos[i]);
+			i++;
+		}
+		free(program->philos);
+		program->philos = NULL;
+	}
+}
+
+static void	free_all(t_program *program)
+{
 	if (program)
 	{
-		if (program->philos)
-		{
-			while (i < program->philo_count)
-			{
-				if (program->philos[i])
-				{
-					if (program->philos[i]->right_fork)
-						pthread_mutex_destroy(program->philos[i]->right_fork);
-					free(program->philos[i]);
-				}
-				i++;
-			}
-			free(program->philos);
-			program->philos = NULL;
-		}
+		free_philos(program);
+		free_forks(program);
 		free(program);
 		program = NULL;
 	}
