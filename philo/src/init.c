@@ -3,63 +3,80 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: ysumeral < ysumeral@student.42istanbul.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/10 14:10:53 by ysumeral          #+#    #+#             */
-/*   Updated: 2025/08/10 10:38:38 by ysumeral         ###   ########.fr       */
+/*   Created: 2025/08/16 18:16:19 by ysumeral          #+#    #+#             */
+/*   Updated: 2025/08/16 22:07:38 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-static void	forks_init(t_program *program)
+static void	init_philos(t_simulation *sim)
 {
 	int	i;
 
+	sim->philos = (t_philo *)ft_calloc(sim->philo_count, sizeof(t_philo));
+	if (!sim->philos)
+		fatal_error("Memory allocation for philosophers failed", sim);
 	i = 0;
-	program->forks = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t)
-			* program->philo_count);
-	if (!program->forks)
-		exit_with_error(program, "Error: Memory allocation failed");
-	while (i < program->philo_count)
+	while (i < sim->philo_count)
 	{
-		pthread_mutex_init(&program->forks[i], NULL);
+		sim->philos[i].id = i + 1;
+		sim->philos[i].simulation = sim;
+		pthread_create(&sim->philos[i].thread, NULL, philo_routine,
+			&sim->philos[i]);
 		i++;
 	}
 }
 
-static void	init_shared_data(t_program *program)
+static void	init_forks(t_simulation *sim)
 {
 	int	i;
 
-	program->last_meal_times = malloc(sizeof(long) * program->philo_count);
-	program->meals_counts = malloc(sizeof(int) * program->philo_count);
-	if (!program->last_meal_times || !program->meals_counts)
-		exit_with_error(program, "Memory allocation failed");
+	sim->forks = (t_mutex *)ft_calloc(sim->philo_count, sizeof(t_mutex));
+	if (!sim->forks)
+		fatal_error("Memory allocation for forks failed", sim);
 	i = 0;
-	while (i < program->philo_count)
+	while (i < sim->philo_count)
 	{
-		program->last_meal_times[i] = get_current_time_ms();
-		program->meals_counts[i] = 0;
+		if (pthread_mutex_init(&sim->forks[i], NULL) != 0)
+			fatal_error("Mutex initialization failed", sim);
 		i++;
 	}
 }
 
-void	init_data(t_program *program, char **argv)
+static void init_data(t_simulation *sim)
 {
-	program->simulation_running = 1;
-	program->all_ate = 0;
-	program->start_time = get_current_time_ms();
-	program->philo_count = ft_atol(argv[1]);
-	program->time_to_die = ft_atol(argv[2]);
-	program->time_to_eat = ft_atol(argv[3]);
-	program->time_to_sleep = ft_atol(argv[4]);
-	program->meals_required = -1;
-	if (argv[5])
-		program->meals_required = ft_atol(argv[5]);
-	init_shared_data(program);
-	pthread_mutex_init(&program->print_mutex, NULL);
-	pthread_mutex_init(&program->death_check_mutex, NULL);
-	pthread_mutex_init(&program->meal_check_mutex, NULL);
-	forks_init(program);
+	int i;
+
+	sim->meals_counts = (int *)ft_calloc(sim->philo_count, sizeof(int));
+	if (!sim->meals_counts)
+		fatal_error("Memory allocation for meals counts failed", sim);
+	sim->last_meal_times = (long *)ft_calloc(sim->philo_count, sizeof(long));
+	if (!sim->last_meal_times)
+		fatal_error("Memory allocation for last meal times failed", sim);
+	sim->simulation_running = 1;
+	sim->start_time = get_current_time_ms();
+	i = 0;
+	while (i < sim->philo_count)
+	{
+		sim->meals_counts[i] = 0;
+		sim->last_meal_times[i] = sim->start_time;
+		i++;
+	}
+	pthread_mutex_init(&sim->print_mutex, NULL);
+	pthread_mutex_init(&sim->check_death_mutex, NULL);
+	pthread_mutex_init(&sim->check_meal_mutex, NULL);
+}
+
+void	init_simulation(int argc, char **argv, t_simulation **sim)
+{
+	*sim = (t_simulation *)ft_calloc(1, sizeof(t_simulation));
+	if (!*sim)
+		fatal_error("Memory allocation for simulation failed", NULL);
+	parse_args(argc, argv, *sim);
+	init_data(*sim);
+	init_forks(*sim);
+	init_philos(*sim);
 }

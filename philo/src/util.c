@@ -1,17 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   util.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: ysumeral < ysumeral@student.42istanbul.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/09 18:01:48 by ysumeral          #+#    #+#             */
-/*   Updated: 2025/08/10 13:25:18 by ysumeral         ###   ########.fr       */
+/*   Created: 2025/08/16 17:50:22 by ysumeral          #+#    #+#             */
+/*   Updated: 2025/08/16 20:44:01 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
-#include <limits.h>
 
 long	get_current_time_ms(void) 
 {
@@ -21,7 +20,26 @@ long	get_current_time_ms(void)
 	return (time.tv_sec * 1000 + time.tv_usec / 1000);
 }
 
-long	ft_atol(char *str)
+void	ft_usleep(long time_ms)
+{
+	long	start_time;
+
+	start_time = get_current_time_ms();
+	while ((get_current_time_ms() - start_time) < time_ms)
+		usleep(100);
+}
+
+int	ft_strlen(const char *s)
+{
+	int	i;
+
+	i = 0;
+	while (*(s + i))
+		i++;
+	return (i);
+}
+
+long	ft_atol(const char *str)
 {
 	size_t	i;
 	int		sign;
@@ -45,13 +63,4 @@ long	ft_atol(char *str)
 		i++;
 	}
 	return (result * sign);
-}
-
-void	ft_usleep(long time_ms)
-{
-	long	start_time;
-
-	start_time = get_current_time_ms();
-	while ((get_current_time_ms() - start_time) < time_ms)
-		usleep(100);
 }

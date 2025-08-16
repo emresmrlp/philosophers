@@ -3,66 +3,66 @@
 /*                                                        :::      ::::::::   */
 /*   memory.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: ysumeral < ysumeral@student.42istanbul.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/09 18:04:10 by ysumeral          #+#    #+#             */
-/*   Updated: 2025/08/10 10:38:37 by ysumeral         ###   ########.fr       */
+/*   Created: 2025/08/16 18:15:01 by ysumeral          #+#    #+#             */
+/*   Updated: 2025/08/16 21:02:35 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-static void	free_forks(t_program *program)
+void	*ft_calloc(size_t count, size_t size)
 {
-	int	i;
+	void	*ptr;
 
-	if (program->forks)
+	ptr = malloc(count * size);
+	if (!ptr)
+		return (NULL);
+	memset(ptr, 0, count * size);
+	return (ptr);
+}
+
+static void	free_forks(t_simulation *sim)
+{
+	if (sim->forks)
 	{
-		i = 0;
-		while (i < program->philo_count)
-		{
-			pthread_mutex_destroy(&program->forks[i]);
-			i++;
-		}
-		free(program->forks);
-		program->forks = NULL;
+		free(sim->forks);
+		sim->forks = NULL;
 	}
 }
 
-static void	free_all(t_program *program)
+static void	free_philos(t_simulation *sim)
 {
-	if (program)
+	if (sim->philos)
 	{
-		free_forks(program);
-		if (program->last_meal_times)
-		{
-			free(program->last_meal_times);
-			program->last_meal_times = NULL;
-		}
-		if (program->meals_counts)
-		{
-			free(program->meals_counts);
-			program->meals_counts = NULL;
-		}
-		pthread_mutex_destroy(&program->print_mutex);
-		pthread_mutex_destroy(&program->death_check_mutex);
-		pthread_mutex_destroy(&program->meal_check_mutex);
-		free(program);
-		program = NULL;
+		free(sim->philos);
+		sim->philos = NULL;
 	}
 }
 
-void	cleanup_data(t_program *program)
+static void free_data(t_simulation *sim)
 {
-	free_all(program);
-	exit(EXIT_SUCCESS);
+	if (sim->meals_counts)
+	{
+		free(sim->meals_counts);
+		sim->meals_counts = NULL;
+	}
+	if (sim->last_meal_times)
+	{
+		free(sim->last_meal_times);
+		sim->last_meal_times = NULL;
+	}
 }
 
-void	exit_with_error(t_program *program, char *error_message)
+void	free_simulation(t_simulation *sim)
 {
-	if (program)
-		free_all(program);
-	if (error_message)
-		printf("%s\n", error_message);
-	exit(EXIT_FAILURE);
+	free_data(sim);
+	free_forks(sim);
+	free_philos(sim);
+	if (sim)
+	{
+		free(sim);
+		sim = NULL;
+	}
 }
