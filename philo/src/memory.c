@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   memory.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral < ysumeral@student.42istanbul.    +#+  +:+       +#+        */
+/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 18:15:01 by ysumeral          #+#    #+#             */
-/*   Updated: 2025/08/16 21:02:35 by ysumeral         ###   ########.fr       */
+/*   Updated: 2025/08/17 01:25:42 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static void	free_philos(t_simulation *sim)
 	}
 }
 
-static void free_data(t_simulation *sim)
+static void	free_data(t_simulation *sim)
 {
 	if (sim->meals_counts)
 	{

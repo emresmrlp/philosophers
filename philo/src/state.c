@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   state.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral < ysumeral@student.42istanbul.    +#+  +:+       +#+        */
+/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 18:00:57 by ysumeral          #+#    #+#             */
-/*   Updated: 2025/08/16 20:36:09 by ysumeral         ###   ########.fr       */
+/*   Updated: 2025/08/17 03:02:49 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,22 +16,30 @@ static void	destroy_forks(t_simulation *sim)
 {
 	int	i;
 
+	if (sim->forks == NULL)
+		return ;
 	i = 0;
 	while (i < sim->philo_count)
 	{
-		if (pthread_mutex_destroy(&sim->forks[i]) != 0)
-			fatal_error("Mutex destruction failed", sim);
+		pthread_mutex_destroy(&sim->forks[i]);
 		i++;
 	}
 }
 
 static void	destroy_mutexes(t_simulation *sim)
 {
+	if (sim->start_time)
+	{
+		pthread_mutex_destroy(&sim->meal_mutex);
+		pthread_mutex_destroy(&sim->print_mutex);
+	}
 	destroy_forks(sim);
 }
 
 void	cleanup(t_simulation *sim)
 {
+	if (sim == NULL)
+		return ;
 	destroy_mutexes(sim);
 	free_simulation(sim);
 }

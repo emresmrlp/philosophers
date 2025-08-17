@@ -3,27 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral < ysumeral@student.42istanbul.    +#+  +:+       +#+        */
+/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 17:46:36 by ysumeral          #+#    #+#             */
-/*   Updated: 2025/08/16 20:36:24 by ysumeral         ###   ########.fr       */
+/*   Updated: 2025/08/16 23:39:57 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
-
-static void	join_philos(t_simulation *sim)
-{
-	int	i;
-
-	i = 0;
-	while (i < sim->philo_count)
-	{
-		if (pthread_join(sim->philos[i].thread, NULL) != 0)
-			fatal_error("Thread join failed", sim);
-		i++;
-	}
-}
 
 int	main(int argc, char **argv)
 {

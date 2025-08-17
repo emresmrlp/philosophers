@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ysumeral < ysumeral@student.42istanbul.    +#+  +:+       +#+         #
+#    By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/16 17:45:17 by ysumeral          #+#    #+#              #
-#    Updated: 2025/08/16 19:17:18 by ysumeral         ###   ########.fr        #
+#    Updated: 2025/08/16 23:56:40 by ysumeral         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ SRC = $(SRC_DIR)/main.c \
 	$(SRC_DIR)/parse.c \
 	$(SRC_DIR)/state.c \
 	$(SRC_DIR)/util.c \
+	$(SRC_DIR)/action.c \
 	$(SRC_DIR)/simulation.c
 OBJ = $(SRC:.c=.o)
 NAME = philo

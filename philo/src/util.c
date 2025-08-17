@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   util.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral < ysumeral@student.42istanbul.    +#+  +:+       +#+        */
+/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 17:50:22 by ysumeral          #+#    #+#             */
-/*   Updated: 2025/08/16 20:44:01 by ysumeral         ###   ########.fr       */
+/*   Updated: 2025/08/17 01:25:33 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-long	get_current_time_ms(void) 
+long	get_current_time_ms(void)
 {
 	struct timeval	time;
 

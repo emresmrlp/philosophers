@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral < ysumeral@student.42istanbul.    +#+  +:+       +#+        */
+/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 18:16:19 by ysumeral          #+#    #+#             */
-/*   Updated: 2025/08/16 22:07:38 by ysumeral         ###   ########.fr       */
+/*   Updated: 2025/08/17 03:17:49 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,11 @@ static void	init_philos(t_simulation *sim)
 	while (i < sim->philo_count)
 	{
 		sim->philos[i].id = i + 1;
+		sim->philos[i].left_fork_id = i;
+		if (sim->philo_count == 1)
+			sim->philos[i].right_fork_id = -1;
+		else
+			sim->philos[i].right_fork_id = (i + 1) % sim->philo_count;
 		sim->philos[i].simulation = sim;
 		pthread_create(&sim->philos[i].thread, NULL, philo_routine,
 			&sim->philos[i]);
@@ -46,18 +51,17 @@ static void	init_forks(t_simulation *sim)
 	}
 }
 
-static void init_data(t_simulation *sim)
+static void	init_data(t_simulation *sim)
 {
-	int i;
+	int	i;
 
+	sim->start_time = get_current_time_ms();
 	sim->meals_counts = (int *)ft_calloc(sim->philo_count, sizeof(int));
 	if (!sim->meals_counts)
 		fatal_error("Memory allocation for meals counts failed", sim);
 	sim->last_meal_times = (long *)ft_calloc(sim->philo_count, sizeof(long));
 	if (!sim->last_meal_times)
 		fatal_error("Memory allocation for last meal times failed", sim);
-	sim->simulation_running = 1;
-	sim->start_time = get_current_time_ms();
 	i = 0;
 	while (i < sim->philo_count)
 	{
@@ -66,8 +70,20 @@ static void init_data(t_simulation *sim)
 		i++;
 	}
 	pthread_mutex_init(&sim->print_mutex, NULL);
-	pthread_mutex_init(&sim->check_death_mutex, NULL);
-	pthread_mutex_init(&sim->check_meal_mutex, NULL);
+	pthread_mutex_init(&sim->meal_mutex, NULL);
+}
+
+void	join_philos(t_simulation *sim)
+{
+	int	i;
+
+	i = 0;
+	while (i < sim->philo_count)
+	{
+		if (pthread_join(sim->philos[i].thread, NULL) != 0)
+			fatal_error("Thread join failed", sim);
+		i++;
+	}
 }
 
 void	init_simulation(int argc, char **argv, t_simulation **sim)
