@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: ysumeral < ysumeral@student.42istanbul.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 17:45:32 by ysumeral          #+#    #+#             */
-/*   Updated: 2025/08/17 03:17:46 by ysumeral         ###   ########.fr       */
+/*   Updated: 2025/08/17 18:31:53 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ typedef struct s_simulation
 {
 	t_philo	*philos;
 	t_mutex	*forks;
-	t_mutex	meal_mutex;
+	t_mutex	access_mutex;
 	t_mutex	print_mutex;
 	int		philo_count;
 	int		max_meals;
@@ -50,6 +50,7 @@ typedef struct s_simulation
 	long	time_to_die;
 	long	time_to_eat;
 	long	time_to_sleep;
+	int		simulation_running;
 }	t_simulation;
 
 void	print_action(const char *message, t_philo *philo);

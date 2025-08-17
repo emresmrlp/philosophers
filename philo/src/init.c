@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: ysumeral < ysumeral@student.42istanbul.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 18:16:19 by ysumeral          #+#    #+#             */
-/*   Updated: 2025/08/17 03:17:49 by ysumeral         ###   ########.fr       */
+/*   Updated: 2025/08/17 18:31:46 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ static void	init_data(t_simulation *sim)
 	int	i;
 
 	sim->start_time = get_current_time_ms();
+	sim->simulation_running = 1;
 	sim->meals_counts = (int *)ft_calloc(sim->philo_count, sizeof(int));
 	if (!sim->meals_counts)
 		fatal_error("Memory allocation for meals counts failed", sim);
@@ -66,11 +67,11 @@ static void	init_data(t_simulation *sim)
 	while (i < sim->philo_count)
 	{
 		sim->meals_counts[i] = 0;
-		sim->last_meal_times[i] = sim->start_time;
+		sim->last_meal_times[i] = 0;
 		i++;
 	}
 	pthread_mutex_init(&sim->print_mutex, NULL);
-	pthread_mutex_init(&sim->meal_mutex, NULL);
+	pthread_mutex_init(&sim->access_mutex, NULL);
 }
 
 void	join_philos(t_simulation *sim)

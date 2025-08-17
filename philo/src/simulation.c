@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simulation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: ysumeral < ysumeral@student.42istanbul.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 19:17:20 by ysumeral          #+#    #+#             */
-/*   Updated: 2025/08/17 03:14:48 by ysumeral         ###   ########.fr       */
+/*   Updated: 2025/08/17 18:31:28 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,13 @@ void	*philo_routine(void *arg)
 	}
 	while (1)
 	{
+		pthread_mutex_lock(&philo->simulation->access_mutex);
+		if (!philo->simulation->simulation_running)
+		{
+			pthread_mutex_unlock(&philo->simulation->access_mutex);
+			break ;
+		}
+		pthread_mutex_unlock(&philo->simulation->access_mutex);
 		act_eat(philo);
 		act_sleep(philo);
 		act_think(philo);
@@ -37,17 +44,23 @@ void	check_death(t_simulation *sim)
 {
 	int		i;
 	long	current_time;
+	long	last_meal_time;
 
-	current_time = get_current_time_ms();
 	i = 0;
 	while (i < sim->philo_count)
 	{
-		if (current_time - sim->last_meal_times[i] > sim->time_to_die)
+		current_time = get_current_time_ms() - sim->start_time;
+		pthread_mutex_lock(&sim->access_mutex);
+		last_meal_time = sim->last_meal_times[i];
+		pthread_mutex_unlock(&sim->access_mutex);
+		if (current_time - last_meal_time > sim->time_to_die)
 		{
-			pthread_mutex_lock(&sim->print_mutex);
-			printf("%ld %d %s\n", current_time - sim->start_time,
-				i + 1, MESSAGE_DIED);
-			pthread_mutex_unlock(&sim->print_mutex);
+			print_action(MESSAGE_DIED, &sim->philos[i]);
+			pthread_mutex_lock(&sim->access_mutex);
+			sim->simulation_running = 0;
+			pthread_mutex_unlock(&sim->access_mutex);
+			join_philos(sim);
+			cleanup(sim);
 			exit(0);
 		}
 		i++;
@@ -65,14 +78,18 @@ void	check_all_ate(t_simulation *sim)
 	ate_enough = 0;
 	while (i < sim->philo_count)
 	{
-		pthread_mutex_lock(&sim->meal_mutex);
+		pthread_mutex_lock(&sim->access_mutex);
 		if (sim->meals_counts[i] >= sim->max_meals)
 			ate_enough++;
-		pthread_mutex_unlock(&sim->meal_mutex);
+		pthread_mutex_unlock(&sim->access_mutex);
 		i++;
 	}
 	if (ate_enough == sim->philo_count)
 	{
+		pthread_mutex_lock(&sim->access_mutex);
+		sim->simulation_running = 0;
+		pthread_mutex_unlock(&sim->access_mutex);
+		join_philos(sim);
 		cleanup(sim);
 		exit(0);
 	}

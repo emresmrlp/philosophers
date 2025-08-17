@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+         #
+#    By: ysumeral < ysumeral@student.42istanbul.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/16 17:45:17 by ysumeral          #+#    #+#              #
-#    Updated: 2025/08/16 23:56:40 by ysumeral         ###   ########.fr        #
+#    Updated: 2025/08/17 18:30:14 by ysumeral         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,5 +37,3 @@ fclean: clean
 	rm -f $(NAME)
 
 re: fclean all
-
-.PHONY: all clean fclean re
