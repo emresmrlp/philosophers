@@ -6,7 +6,7 @@
 /*   By: ysumeral < ysumeral@student.42istanbul.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 17:50:22 by ysumeral          #+#    #+#             */
-/*   Updated: 2025/08/17 18:31:30 by ysumeral         ###   ########.fr       */
+/*   Updated: 2025/08/22 16:23:53 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,17 @@ long	get_current_time_ms(void)
 	return (time.tv_sec * 1000 + time.tv_usec / 1000);
 }
 
-void	ft_usleep(long time_ms)
+void	ft_usleep(long time_ms, t_simulation *sim)
 {
 	long	start_time;
 
 	start_time = get_current_time_ms();
 	while ((get_current_time_ms() - start_time) < time_ms)
+	{
+		if (sim && !is_simulation_running(sim))
+			break ;
 		usleep(100);
+	}
 }
 
 int	ft_strlen(const char *s)

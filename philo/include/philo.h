@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: ysumeral < ysumeral@student.42istanbul.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 17:45:32 by ysumeral          #+#    #+#             */
-/*   Updated: 2025/08/22 12:12:12 by ysumeral         ###   ########.fr       */
+/*   Updated: 2025/08/22 16:27:50 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,6 @@ int		parse_args(int argc, char **argv, t_simulation *sim);
 int		ft_strlen(const char *s);
 long	ft_atol(const char *str);
 long	get_current_time_ms(void);
-void	ft_usleep(long time_ms);
+void	ft_usleep(long time_ms, t_simulation *sim);
 
 #endif

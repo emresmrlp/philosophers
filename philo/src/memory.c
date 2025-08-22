@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   memory.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: ysumeral < ysumeral@student.42istanbul.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 18:15:01 by ysumeral          #+#    #+#             */
-/*   Updated: 2025/08/22 12:12:40 by ysumeral         ###   ########.fr       */
+/*   Updated: 2025/08/22 16:27:10 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

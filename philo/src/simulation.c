@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simulation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: ysumeral < ysumeral@student.42istanbul.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 19:17:20 by ysumeral          #+#    #+#             */
-/*   Updated: 2025/08/22 12:11:52 by ysumeral         ###   ########.fr       */
+/*   Updated: 2025/08/22 16:26:58 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	*philo_routine(void *arg)
 
 	philo = (t_philo *)arg;
 	if (philo->id % 2 == 0)
-		ft_usleep(philo->simulation->time_to_eat / 10);
+		ft_usleep((philo->simulation->time_to_eat / 10), philo->simulation);
 	if (philo->simulation->philo_count == 1)
 	{
 		act_eat(philo);
@@ -50,10 +50,13 @@ void	check_death(t_simulation *sim)
 		pthread_mutex_unlock(&sim->access_mutex);
 		if (current_time - last_meal_time > sim->time_to_die)
 		{
-			print_action(MESSAGE_DIED, &sim->philos[i]);
+			pthread_mutex_lock(&sim->print_mutex);
+			printf("%ld %d died\n", current_time, sim->philos[i].id);
 			pthread_mutex_lock(&sim->access_mutex);
 			sim->simulation_running = 0;
 			pthread_mutex_unlock(&sim->access_mutex);
+			pthread_mutex_unlock(&sim->print_mutex);
+			return ;
 		}
 		i++;
 	}
@@ -100,6 +103,6 @@ void	simulation_manager(t_simulation *sim)
 	{
 		check_death(sim);
 		check_all_ate(sim);
-		usleep(1000);
+		usleep(100);
 	}
 }
