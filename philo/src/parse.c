@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral < ysumeral@student.42istanbul.    +#+  +:+       +#+        */
+/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 18:23:03 by ysumeral          #+#    #+#             */
-/*   Updated: 2025/08/16 20:58:47 by ysumeral         ###   ########.fr       */
+/*   Updated: 2025/08/22 12:10:47 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,20 +52,20 @@ static int	validate_arg_long(const char *arg)
 	return (1);
 }
 
-void	parse_args(int argc, char **argv, t_simulation *sim)
+int	parse_args(int argc, char **argv, t_simulation *sim)
 {
 	if (!(argc == 5 || argc == 6))
-		fatal_error("Invalid number of arguments", sim);
+		return (fatal_error("Invalid number of arguments", sim));
 	if (!validate_arg_int(argv[1]) || ft_atol(argv[1]) <= 0)
-		fatal_error("Invalid philosopher count", sim);
+		return (fatal_error("Invalid philosopher count", sim));
 	if (!validate_arg_long(argv[2]))
-		fatal_error("Invalid time to die", sim);
+		return (fatal_error("Invalid time to die", sim));
 	if (!validate_arg_long(argv[3]))
-		fatal_error("Invalid time to eat", sim);
+		return (fatal_error("Invalid time to eat", sim));
 	if (!validate_arg_long(argv[4]))
-		fatal_error("Invalid time to sleep", sim);
+		return (fatal_error("Invalid time to sleep", sim));
 	if (argc == 6 && !validate_arg_int(argv[5]))
-		fatal_error("Invalid number of meals", sim);
+		return (fatal_error("Invalid number of meals", sim));
 	sim->philo_count = (int)ft_atol(argv[1]);
 	sim->time_to_die = ft_atol(argv[2]);
 	sim->time_to_eat = ft_atol(argv[3]);
@@ -74,4 +74,5 @@ void	parse_args(int argc, char **argv, t_simulation *sim)
 		sim->max_meals = (int)ft_atol(argv[5]);
 	else
 		sim->max_meals = -1;
+	return (0);
 }

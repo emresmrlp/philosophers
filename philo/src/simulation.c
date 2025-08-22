@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simulation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral < ysumeral@student.42istanbul.    +#+  +:+       +#+        */
+/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 19:17:20 by ysumeral          #+#    #+#             */
-/*   Updated: 2025/08/17 18:31:28 by ysumeral         ###   ########.fr       */
+/*   Updated: 2025/08/22 12:11:52 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,8 @@ void	*philo_routine(void *arg)
 	}
 	while (1)
 	{
-		pthread_mutex_lock(&philo->simulation->access_mutex);
-		if (!philo->simulation->simulation_running)
-		{
-			pthread_mutex_unlock(&philo->simulation->access_mutex);
+		if (!is_simulation_running(philo->simulation))
 			break ;
-		}
-		pthread_mutex_unlock(&philo->simulation->access_mutex);
 		act_eat(philo);
 		act_sleep(philo);
 		act_think(philo);
@@ -59,9 +54,6 @@ void	check_death(t_simulation *sim)
 			pthread_mutex_lock(&sim->access_mutex);
 			sim->simulation_running = 0;
 			pthread_mutex_unlock(&sim->access_mutex);
-			join_philos(sim);
-			cleanup(sim);
-			exit(0);
 		}
 		i++;
 	}
@@ -89,15 +81,22 @@ void	check_all_ate(t_simulation *sim)
 		pthread_mutex_lock(&sim->access_mutex);
 		sim->simulation_running = 0;
 		pthread_mutex_unlock(&sim->access_mutex);
-		join_philos(sim);
-		cleanup(sim);
-		exit(0);
 	}
+}
+
+int	is_simulation_running(t_simulation *sim)
+{
+	int	running;
+
+	pthread_mutex_lock(&sim->access_mutex);
+	running = sim->simulation_running;
+	pthread_mutex_unlock(&sim->access_mutex);
+	return (running);
 }
 
 void	simulation_manager(t_simulation *sim)
 {
-	while (1)
+	while (is_simulation_running(sim))
 	{
 		check_death(sim);
 		check_all_ate(sim);

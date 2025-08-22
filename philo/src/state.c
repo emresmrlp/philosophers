@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   state.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral < ysumeral@student.42istanbul.    +#+  +:+       +#+        */
+/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 18:00:57 by ysumeral          #+#    #+#             */
-/*   Updated: 2025/08/17 18:31:32 by ysumeral         ###   ########.fr       */
+/*   Updated: 2025/08/22 12:03:33 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,11 @@ void	cleanup(t_simulation *sim)
 	free_simulation(sim);
 }
 
-void	fatal_error(const char *message, t_simulation *sim)
+int	fatal_error(const char *message, t_simulation *sim)
 {
 	write(2, "Error: ", 7);
 	write(2, message, ft_strlen(message));
 	write(2, "\n", 1);
 	cleanup(sim);
-	exit(1);
+	return (1);
 }

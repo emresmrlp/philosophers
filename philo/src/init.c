@@ -3,22 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysumeral < ysumeral@student.42istanbul.    +#+  +:+       +#+        */
+/*   By: ysumeral <ysumeral@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 18:16:19 by ysumeral          #+#    #+#             */
-/*   Updated: 2025/08/17 18:31:46 by ysumeral         ###   ########.fr       */
+/*   Updated: 2025/08/22 12:13:03 by ysumeral         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-static void	init_philos(t_simulation *sim)
+static int	init_philos(t_simulation *sim)
 {
 	int	i;
 
 	sim->philos = (t_philo *)ft_calloc(sim->philo_count, sizeof(t_philo));
 	if (!sim->philos)
-		fatal_error("Memory allocation for philosophers failed", sim);
+		return (fatal_error("Memory allocation for philosophers failed", sim));
 	i = 0;
 	while (i < sim->philo_count)
 	{
@@ -33,25 +33,27 @@ static void	init_philos(t_simulation *sim)
 			&sim->philos[i]);
 		i++;
 	}
+	return (0);
 }
 
-static void	init_forks(t_simulation *sim)
+static int	init_forks(t_simulation *sim)
 {
 	int	i;
 
 	sim->forks = (t_mutex *)ft_calloc(sim->philo_count, sizeof(t_mutex));
 	if (!sim->forks)
-		fatal_error("Memory allocation for forks failed", sim);
+		return (fatal_error("Memory allocation for forks failed", sim));
 	i = 0;
 	while (i < sim->philo_count)
 	{
 		if (pthread_mutex_init(&sim->forks[i], NULL) != 0)
-			fatal_error("Mutex initialization failed", sim);
+			return (fatal_error("Mutex initialization failed", sim));
 		i++;
 	}
+	return (0);
 }
 
-static void	init_data(t_simulation *sim)
+static int	init_data(t_simulation *sim)
 {
 	int	i;
 
@@ -59,10 +61,11 @@ static void	init_data(t_simulation *sim)
 	sim->simulation_running = 1;
 	sim->meals_counts = (int *)ft_calloc(sim->philo_count, sizeof(int));
 	if (!sim->meals_counts)
-		fatal_error("Memory allocation for meals counts failed", sim);
+		return (fatal_error("Memory allocation for meals counts failed", sim));
 	sim->last_meal_times = (long *)ft_calloc(sim->philo_count, sizeof(long));
 	if (!sim->last_meal_times)
-		fatal_error("Memory allocation for last meal times failed", sim);
+		return (fatal_error("Memory allocation for last meal times failed",
+				sim));
 	i = 0;
 	while (i < sim->philo_count)
 	{
@@ -72,9 +75,10 @@ static void	init_data(t_simulation *sim)
 	}
 	pthread_mutex_init(&sim->print_mutex, NULL);
 	pthread_mutex_init(&sim->access_mutex, NULL);
+	return (0);
 }
 
-void	join_philos(t_simulation *sim)
+int	join_philos(t_simulation *sim)
 {
 	int	i;
 
@@ -82,18 +86,24 @@ void	join_philos(t_simulation *sim)
 	while (i < sim->philo_count)
 	{
 		if (pthread_join(sim->philos[i].thread, NULL) != 0)
-			fatal_error("Thread join failed", sim);
+			return (fatal_error("Thread join failed", sim));
 		i++;
 	}
+	return (0);
 }
 
-void	init_simulation(int argc, char **argv, t_simulation **sim)
+int	init_simulation(int argc, char **argv, t_simulation **sim)
 {
 	*sim = (t_simulation *)ft_calloc(1, sizeof(t_simulation));
 	if (!*sim)
-		fatal_error("Memory allocation for simulation failed", NULL);
-	parse_args(argc, argv, *sim);
-	init_data(*sim);
-	init_forks(*sim);
-	init_philos(*sim);
+		return (fatal_error("Memory allocation for simulation failed", *sim));
+	if (parse_args(argc, argv, *sim))
+		return (1);
+	if (init_data(*sim))
+		return (1);
+	if (init_forks(*sim))
+		return (1);
+	if (init_philos(*sim))
+		return (1);
+	return (0);
 }
